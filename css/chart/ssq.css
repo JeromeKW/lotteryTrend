@@ -1,0 +1,72 @@
+.qihao{width:66px;}
+.qihao select{width:60px;}
+.box1 {width:628px;}
+.box2 {width:304px;}
+/*.chtContssq .chtMainColor .box2 .bg1,
+.chtContssqTW .chtMainColor .box2 .bg1,
+.chtContssq .chtMainColor .box2 .bg1Txt,
+.chtContssqTW .chtMainColor .box2 .bg1Txt{color:#CBC9E1;}*/
+.chtContssq .chtMain .box2 .redBall,
+.chtContssq .chtMain .box2 .blueBall,.chtContssqTW .chtMain .box2 .blueBall,
+.chtContssq .chtMain .box2 .greenBall,
+.chtContssq .chtMain .box2 .orangeBall,
+.chtContssq .chtMain .box2 .redBall2,
+.chtContssq .chtMain .box2 .grayBall{color:#fff;}
+/*chtContssqTW*/
+.chtContssqTW .bg1,.chtContssqTW .betBall{width:17px;}
+.chtContssqTW .redBall{background-position:0 -188px;}
+.chtContssqTW .blueBall{background-position:0 -163px;}
+.chtContssqTW .grayBall{background-position:0 -214px;}
+.chtContssqTW .orangeBall{background-position:-26px -214px;}
+.chtContssqTW .redBall2{background-position:-26px -188px;}
+.chtContssqTW .greenBall{background-position:-26px -163px;}
+.chtContssqTW .chartH{ text-align:center; font-family:'宋体';}
+.chtContssqTW .operation{padding:5px 0;}
+.chtContssqTW .chartHBottom .operation{padding:1px 0;}
+.chtContssqTW .qihao{width:81px;}
+.chtContssqTW .box1 {width:73px;}
+.chtContssqTW .box3{width:56px;float:left;}
+.chtContssqTW .box2 {width:288px;}
+.chtContssqTW .chartH .operation {padding:5px 0;}
+/*chtContssqBefore*/
+.chtContssqBefore .chartH .box2{width:304px;}
+.chtContssqBefore .box2{width:49px;}
+.chtContssqBefore .chartTit .box2 .bg1{width:47px;}
+.chtContssqBefore .box2 .bg1 {width:23px;}
+
+.chtContssqBefore012 .box2 .bg1{width:15px;}
+
+.chtContssqBefore .bg1.bgye,.chtContssqAfter .bg1.bgye{background-color:#FCE2CB;color:#CD3D3C;}
+.chtContssqBefore .bg1.bggr,.chtContssqAfter .bg1.bggr{background-color:#F3F9E4;color:#647911;}
+/*chtContssqAfter*/
+.chtContssqAfter .qihao{width:140px;}
+.chtContssqAfter .bg1{width:36px;}
+.chtContssqAfter .box1{width:593px;}
+.chtContssqAfter .box2 {width:75px;}
+.chtContssqAfter .box3{ width:111px;float:left;}
+.chtContssqAfter .chartListYil .lineBox{left:12px;}
+.chtContssqAfter .blueBall{background-position:10px -163px}
+/*chtContOddEven*/
+.chtContOddEven .qihao{width:59px;}
+.chtContOddEven .qihao select{width:57px;}
+.chtContOddEven .chartH .box1 {width:631px;}
+.chtContOddEven .chartH .box2 {width:300px;}
+.chtContOddEven .box1{width:324px;}
+.chtContOddEven .box3{ width:305px;float:left;}
+.chtContOddEven .box2 {width:153px;}
+/*chtContPrimecomp*/
+.chtContPrimecomp .qihao{width:59px;}
+.chtContPrimecomp .qihao select{width:57px;}
+.chtContPrimecomp .chartH .box1 {width:631px;}
+.chtContPrimecomp .chartH .box2 {width:300px;}
+.chtContPrimecomp .box1{width:229px;}
+.chtContPrimecomp .box3{ width:400px;float:left;}
+.chtContPrimecomp .box2 {width:134px;}
+.chtContPrimecomp .box4{ width:171px;float:left;}
+/*chtCont012trend*/
+.chtCont012trend .qihao{width:53px;}
+.chtCont012trend .qihao select{width:50px;}
+.chtCont012trend .chartH .box1,.chtCont012trend .box1{width:210px;}
+.chtCont012trend .chartH .box2,.chtCont012trend .box2{width:96px;}
+.chtCont012trend .chartH .box3,.chtCont012trend .box3{width:115px;width:115px;float:left;}
+.chtCont012trend .operation { text-align:center;}

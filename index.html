@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<meta charset="utf-8" />
+<title>双色球综合走势</title>
+<script type="text/javascript">
+//ie6下图片重复加载bug解决
+var isIE = !!window.ActiveXObject;
+var isIE6 = isIE && !window.XMLHttpRequest;
+if(isIE6){document.execCommand("BackgroundImageCache", false, true);}
+</script>
+<link href="./css/global.css" rel="stylesheet" type="text/css" />
+<link href="./css/chart/chart.css" rel="stylesheet" type="text/css"></link>
+<link href="./css/chart/ssq.css" rel="stylesheet" type="text/css"></link>
+<script type="text/javascript" src="./js/jquery/jquery.js"></script>
+<script type="text/javascript" src="./js/chart.class.js"></script>
+<script type="text/javascript" src="./js/ssq.js"></script>
+<script type="text/javascript">
+    var lotteryType = "SSQ";
+	var lotteryNo = "2017043";
+    var trendType = "NumTrend";
+    var queryCount = 50;
+    
+    //蓝球画线
+    //zline2_0.showLine(this.checked);
+</script>
+</head>
+<body class="chartstyle">
+	<div class="chartMenu">
+        <div class="clearfix newNavDiv">
+        	<a href="/shuangseqiu/ssqzs/" class="selected">综合走势图</a>
+        	<a href="/shuangseqiu/ssqzs/oddeven/" >奇偶分布</a>
+			<a href="/shuangseqiu/ssqzs/primecomp/" >质合分布</a>
+            <a href="/shuangseqiu/ssqzs/012trend/" >012路(除3余数)分布</a>
+			<a href="/shuangseqiu/ssqzs/lskj/" >历史开奖</a>
+            <a href="/shuangseqiu/ssqzs/temptrend/" >号码冷热</a>
+        </div>
+	</div>
+	<!--<div class="chartOper"><strong class="font_14">福彩双色球走势图表</strong></div>-->
+	<div id="chart_trend_wrapper" class="clearfix chtCont chtContssq">
+    	<div id="chart_trend_title" class="chtTop">
+			<div class="chartH">
+          		<div class="qihao">
+              		<select id="select_period">
+						<option value="10">近10期</option>
+                        <option value="20">近20期</option>
+                        <option selected="selected" value="50">近50期</option>
+                        <option value="100">近100期</option>
+                        <option value="300">近300期</option>
+                    </select>
+                </div>
+          		<div class="box1 bdr2">
+            		<div class="operation operationmore">
+                		<b class="qutxt">红球</b>
+                    	<p id="part_type_first" class="quNavMore">
+							<a class="link_blue" href="javascript:void(0);" part="0" hidefocus>不分区</a><em class="newnavline"></em>
+							<a class="link_blue" href="javascript:void(0);" part="3" hidefocus>三分区</a><em class="newnavline"></em>
+							<a class="link_blue selected" href="javascript:void(0);" part="4" hidefocus>四分区</a><em class="newnavline"></em>
+							<a class="link_blue" href="javascript:void(0);" part="7" hidefocus>七分区</a>
+						</p>
+          				<label class="checkTxt" for="ctrl_repeat_num"><input type="checkbox" id="ctrl_repeat_num" ><span class="chonghcolor">重号</span></label>
+                		<label class="checkTxt" for="ctrl_conti_num"><input type="checkbox" id="ctrl_conti_num" ><span class="lianhcolor">连号</span></label>
+               			<label class="checkTxt" for="ctrl_side_num"><input type="checkbox" id="ctrl_side_num" ><span class="bianjcolor">边号</span></label>
+                		<label class="checkTxt" for="ctrl_miss_num"><input type="checkbox" id="ctrl_miss_num" ><span>遗漏</span></label>
+                		<label class="checkTxt" for="ctrl_yilou_shape"><input type="checkbox" id="ctrl_yilou_shape" ><span>遗漏柱</span></label>
+           			</div>
+          		</div>
+          		<div class="box2">
+            		<div class="operation nobdr">
+                		<b class="qutxt">蓝球</b>
+                        <p id="part_type_second" class="quNav">
+							<a class="link_blue selected" href="javascript:void(0);" part="2" hidefocus>二分区</a><em class="newnavline"></em>
+							<a class="link_blue" href="javascript:void(0);" part="3" hidefocus>三分区</a>
+						</p>
+            		</div>
+          		</div>
+    		</div>
+	        <div id="chart_title" class="clearfix chartTit" style="display: none;">
+	            <p class="qihao"><span class="qihaoSpan">期号</span><em class="qihaoIcon" id="order_period"></em></p>
+	        </div>
+		</div>
+		<div id="loading_data_layer"><img src="./image/loading.gif" /></div>
+        <div id="chart_main" class="chtMain" style="display: none;"></div>
+    	<div id="chart_trend_footer">
+			<div class="okselecter">
+				<div class="betbox" id="chart_bet_wrap">
+	            	<div class="clearfix">
+	                	<p class="qihao">选号器</p>
+						<div class="box1 bdr2 ctrl_selecter">
+							<em class="betBall">1</em><em class="betBall">2</em><em class="betBall">3</em><em class="betBall">4</em><em class="betBall">5</em><em class="betBall">6</em><em class="betBall">7</em><em class="betBall">8</em><em class="betBall">9</em><em class="betBall">10</em><em class="betBall">11</em><em class="betBall">12</em><em class="betBall">13</em><em class="betBall">14</em><em class="betBall">15</em><em class="betBall">16</em><em class="betBall">17</em><em class="betBall">18</em><em class="betBall">19</em><em class="betBall">20</em><em class="betBall">21</em><em class="betBall">22</em><em class="betBall">23</em><em class="betBall">24</em><em class="betBall">25</em><em class="betBall">26</em><em class="betBall">27</em><em class="betBall">28</em><em class="betBall">29</em><em class="betBall">30</em><em class="betBall">31</em><em class="betBall">32</em><em class="betBall">33</em>
+						</div>
+	                	<div class="box2 ctrl_selecter">
+	                		<em class="betBall">1</em><em class="betBall">2</em><em class="betBall">3</em><em class="betBall">4</em><em class="betBall">5</em><em class="betBall">6</em><em class="betBall">7</em><em class="betBall">8</em><em class="betBall">9</em><em class="betBall">10</em><em class="betBall">11</em><em class="betBall">12</em><em class="betBall">13</em><em class="betBall">14</em><em class="betBall">15</em><em class="betBall">16</em>
+	                	</div>
+	                </div>
+	            </div>
+				<div class="clearfix gaopin_chart_buy">
+					<div class="bet_money_display">
+						<input type="text" maxlength="5" id="buy_note_num" class="buy_note_num" value="1">&nbsp;倍&nbsp;&nbsp;
+						金额：[ <em id="buy_totalmoney" class="font_red">0</em> ] 元
+					</div>
+	                <div class="clearfix betBtn">
+						<form method="post" target="_blank" name="trendChartBetForm" class="trendChartBetForm" id="trendChartBetForm">
+							<input type="hidden" name="LotteryType" value="SSQ"/>
+							<input type="hidden" name="w"/>
+							<input type="hidden" name="LotteryNo"/>
+							<input type="hidden" name="MultiNum"/>
+							<input type="hidden" name="WagerCount"/>
+							<input type="hidden" name="ConsignType"/>
+							<input type="hidden" name="SubmitType"/>
+							<input type="hidden" name="WagerStore"/>
+							<input type="hidden" name="SingleMulti" value="Multi"/>
+							<input type="hidden" name="SaveProject" value="N"/>
+							<input type="hidden" name="MultiProject" value="Y"/>
+							<input type="hidden" name="manner" value="5"/>
+							<a hidefoucs class="bigtzbtn" id="trend_buy_btn" href="javascript:void(0);" title="提交">&nbsp;</a>
+							<a hidefoucs class="ybtn79" id="trend_filter_btn" href="javascript:void(0);">过&nbsp;滤</a>
+							<a hidefoucs class="ybtn79" id="trend_append_btn" href="javascript:void(0);">追&nbsp;号</a>
+	                    </form>	
+					</div>
+				</div>
+			</div>
+		</div>
+        <div class="tongji" id="data_count_list"></div>
+    	<div class="chartBottom">
+	        <div class="clearfix chartTit">
+	            <p class="qihao">&nbsp;</p>
+	            <div class="box1 bdr2">
+	            	<em class="bg1">1</em><em class="bg1">2</em><em class="bg1">3</em><em class="bg1">4</em><em class="bg1">5</em><em class="bg1">6</em><em class="bg1">7</em><em class="bg1">8</em><em class="bg1">9</em><em class="bg1">10</em><em class="bg1">11</em><em class="bg1">12</em><em class="bg1">13</em><em class="bg1">14</em><em class="bg1">15</em><em class="bg1">16</em><em class="bg1">17</em><em class="bg1">18</em><em class="bg1">19</em><em class="bg1">20</em><em class="bg1">21</em><em class="bg1">22</em><em class="bg1">23</em><em class="bg1">24</em><em class="bg1">25</em><em class="bg1 fqborder">26</em><em class="bg1">27</em><em class="bg1">28</em><em class="bg1">29</em><em class="bg1">30</em><em class="bg1">31</em><em class="bg1">32</em><em class="bg1">33</em>
+	            </div>
+	            <div class="box2 ">
+	            	<em class="bg1">1</em><em class="bg1">2</em><em class="bg1 fqborder">3</em><em class="bg1">4</em><em class="bg1">5</em><em class="bg1">6</em><em class="bg1">7</em><em class="bg1">8</em><em class="bg1">9</em><em class="bg1">10</em><em class="bg1">11</em><em class="bg1">12</em><em class="bg1">13</em><em class="bg1">14</em><em class="bg1">15</em><em class="bg1">16</em>
+	        	</div>
+	        </div>
+            <div class="chartH chartHBottom">
+				<div class="qihao">&nbsp;</div>
+				<div class="box1 bdr2">
+            		<div class="operation"><b>红球</b></div>
+          		</div>
+              	<div class="box2">
+                	<div class="operation nobdr"><b>蓝球</b></div>
+              	</div>
+        	</div>    
+       	</div>
+	    <div id="chart_notice" class="tixingBox gray6">
+			<p class="tixing"><span class="font_red">网站提醒：</span>图表数据仅供参考使用，并不作为最终投注依据，本站力求周全，但不保证绝对精准。</p>
+    	</div>
+	</div>
+
+	<div class="helps gray6">
+	    	<h3 class="helpsH3">双色球[综合走势图表]使用帮助</h3>
+			<p><span class="font_orange">什么是[定位]：</span>您点击双色球图标的定位按钮后，会浮出筛选第一位、第二位、第三位、第四位、第五位、第六位开奖号码的选择框，您可以选择任意位的号码后可以单独查看该号码的走势。该功能将方便您更精确的通过单位位置的号码走势进行选好分析。</p>
+			<p><span class="font_orange">分区是什么意思：</span>本双色球走势图提供智能分区的功能，您可以选择三分区、四分区和七分区，选择分区功能后，走势图将自动按照您选择分区数将前区号码划分为多个区域，以方便您按照分区分布的方式进行选号分析。</p>
+			<p><span class="font_orange">[重号]是什么意思：</span>重号是当前期开奖号码中与上一期开奖号码相同的号，您只需勾选“重号”的勾选框，在走势图中奖使用不同颜色标出重号的号码，以方便您快速的识别重号号码。</p>
+			<p><span class="font_orange">[连号]是什么意思：</span>连号即开奖号码中号码数值相连的连号，如某期双色球的红球开奖号码为03、04、16、19、30、33，其中的03、04便为连号。您勾选图标上方“连号”的勾选框后，连号号码中数值的一个将以不同的颜色标识出来，以方便您快速的找到连号号码。</p>
+			<p><span class="font_orange">[边号]是什么意思：</span>“边号”又叫做“邻号”，即当前期开奖号码中等于上期开奖号码加减1的号码。比如双色球第2013056期红球开奖号码为03、12、25、26、28、29，双色球第2013057期红球开奖号码为13、16、19、23、27、28，其中第2013057期的13（12+1）、27（28-1）、28（29-1）便是边号。您勾选图标上方的“边号”勾选框后，边号号码会有不同的颜色标识，以方便您快速的找到边号号码。</p>
+			<p><span class="font_orange">重号、边号、连号色彩标识规则：</span>某些情况下，当勾选边号或重号或连号时，发现应该有标识的号码未对应相应的颜色。由于各种边号、重号、连号与已经标识颜色的直连（三连号）、斜连（三斜连号）存在重复。那么我们采用的如下规则：1.当边号、重号、连号的颜色标识与直连、斜连重复时，只显示直连与斜连的颜色：因为相对而言直连和斜连是更重要的选好或杀号依据；2.当边号、重号、连号的颜色标识相互重复时，若一个号码既是重号又是连号，以重号为主；若既是重号又是边号，以重号为主；若既是连号又是边号，以连号为主。</p>
+	</div>	
+</body>
+</html>
