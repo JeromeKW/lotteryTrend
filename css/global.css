@@ -4,7 +4,7 @@ html{color:#000;background:#FFF; margin:0px; padding:0px; font-size:12px;}
 body, dl, dd, h1, h2, h3, h4, h5, h6, p, form{margin:0;}   
 ul,ol,li{margin:0;padding:0;list-style:none}
 h1,h2,h3,h4,h5,h6,s,i,em{font-size:12px;font-weight:normal;}
-body{font:12px/22px "宋体"; text-align:center; color:#333;background:#fff;}
+body{font-family:Arial,'Microsoft Yahei','\5FAE\8F6F\96C5\9ED1','Hiragino Sans GB','\5B8B\4F53'; text-align:center; color:#333;background:#fff; font-size: 12px;}
 table {border-collapse:collapse;border-spacing:0;}
 fieldset,img {border:0;}
 q:before,q:after {content:'';}

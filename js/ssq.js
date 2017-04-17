@@ -455,7 +455,8 @@ function drawLineInit(){
             obj.disabled	= false;
         }
     }
-    if(trendType == 'AreaAfter'){zline1_0.showLine(true);}
+    // if(trendType == 'AreaAfter'){zline1_0.showLine(true);}
+    zline2_0.showLine(true);
 }
 
 //初始化定位

@@ -1086,7 +1086,7 @@ function drawChartLine(param){
         if(self.bIsIE){
             var sLabel = self.sXmlns +':line';
             var oLine = document.createElement('<'+ sLabel +'></'+ sLabel +'>');
-            oLine.style.cssText = 'position:absolute; zindex:9; top:'+ oPro.top +'; left:'+ oPro.left +'; visibility:'+ self.sVisibility;
+            oLine.style.cssText = 'position:absolute; z-index:3; top:'+ oPro.top +'; left:'+ oPro.left +'; visibility:'+ self.sVisibility;
             oLine.strokeColor = self.sColor;
             oLine.strokeWeight = self.nWeight +'px';
             oLine.from = oPro.from.x +','+ oPro.from.y;
@@ -1096,7 +1096,7 @@ function drawChartLine(param){
             var oCvs = document.createElement('canvas');
             oCvs.width = oPro.width;
             oCvs.height = oPro.height;
-            oCvs.style.cssText = 'position:absolute; zindex:9; top:'+ oPro.top +'; left:'+ oPro.left +'; visibility:'+ self.sVisibility;
+            oCvs.style.cssText = 'position:absolute; z-index:3; top:'+ oPro.top +'; left:'+ oPro.left +'; visibility:'+ self.sVisibility;
             var cline = oCvs.getContext('2d');
             cline.strokeStyle = self.sColor;
             cline.lineCap = 'round';
