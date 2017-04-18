@@ -1,6 +1,5 @@
 /**
-* @fileOverview 走势图表JS类
-* @author wangjj@okooo.net 2013-7-2
+*  走势图表类
 */
 
 //各彩种相关配置
@@ -760,9 +759,6 @@ function drawTrendChart(param){
         }
         
         self.oSkipData.html(sNACountHtml + sAveHtml + sMaxSkip + sHSCountDetail + sNowSkip + sNowSkipText);
-        /* $.each($('.chartList', self.oSkipData), function(i, e){
-            $('div:last', $(e)).removeClass('bdr2');
-        }); */
         self.oSkipData.show();
         if(self.bIsFloat){self.checkTitleFooterFloat();}
         if(self.fCallback && typeof self.fCallback == 'function'){self.fCallback.call();}

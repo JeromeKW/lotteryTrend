@@ -396,8 +396,6 @@ function showHideMissShape(flag){
                 }
             }
         }
-        // $('#nowskip_shape').show();
-        // $('#nowskip_text').hide();
     }else{
         if(!flag){
             for(var key in oChartTrend.oMissData){
@@ -450,9 +448,9 @@ function drawLineInit(){
         if(!chk){
             eval('zline'+ key +'_'+ val +'.showLine(false)');
             obj.checked	= chk;
-            obj.disabled	= true;
+            obj.disabled = true;
         }else{
-            obj.disabled	= false;
+            obj.disabled = false;
         }
     }
     // if(trendType == 'AreaAfter'){zline1_0.showLine(true);}
@@ -487,5 +485,4 @@ function callBackFun(){
     showHideCfNum();
     showHideLhNum();
     showHidePbNum();
-    // showHidePart();
 }
