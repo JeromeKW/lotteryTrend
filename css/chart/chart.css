@@ -33,7 +33,7 @@
 .chartBottomFloat{position: fixed;bottom: 0; z-index: 150; background-color: #fff; _position:absolute; _top:expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-this.offsetHeight)); _zoom:1;}
 /*chart operation*/
 .operation .qutxt,.operation .diwei,.operation .quNav,.operation .quNavMore,.operation .link_blue,.operation .checkTxt{ float:left;}
-.chartH .operation,.chartOper .operation{position:relative; z-index:5; margin-left: 30px; float: left;}
+.chartH .operation,.chartOper .operation{position:relative; z-index:5; margin-left: 10px; float: left;}
 .chartH .qihao{height:20px;padding:4px 0;border-top:0 none;text-align:center;}
 .chartTit .qihaoSpan{ position:relative;top:-4px;left:-2px; z-index:1;}
 .chartHBottom .operation,.chartHBottom .qihao{padding:0;}
@@ -43,10 +43,10 @@ background: -moz-linear-gradient(top, #FFFFFF, #EDEDED 80%);background: -webkit-
 filter:progid:DXImageTransform.microsoft.gradient(gradienttype=0,startColorStr=#FFFFFF,endColorStr=#EDEDED);}
 .graybtnauto2{display:inline-block;float:left;margin:3px 5px 0 0;padding:0 5px;height:20px; line-height:20px;*height:18px;*line-height:18px;border:1px solid #C4CFD6;border-radius:2px;-webkit-border-radiue:2px;-moz-border-radius:2px;text-align:center;background:#F4F4F4; 
 background: -moz-linear-gradient(top, #FFFFFF, #EDEDED 80%);background: -webkit-gradient(linear, 0 0, 0 80%, from(#FFFFFF), to(#EDEDED));}
-.operation .quNav{padding:0 0 0 10px;}
+.operation .quNav{padding:0 0 0 2px;}
 .operation .quNavMore{padding:0 15px 0 0;*padding:0 10px 0 0;*line-height:20px;}
 *+html.operation .quNavMore{padding:0 10px 0 0;line-height:20px;}
-.operation .link_blue{padding:0 5px;}
+.operation .link_blue{padding:0 7px;}
 .operation .link_blue.selected{ color:#fff; background-color: #323232;}
 .operation .link_blue:hover{ text-decoration:none;}
 .checkTxt{margin:0 10px 0 0;height:18px; line-height:18px;*line-height:20px;overflow:hidden; float:left;}

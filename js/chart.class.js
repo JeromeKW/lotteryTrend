@@ -330,7 +330,7 @@ function drawTrendChart(param){
              sUrlTrendType = self.sTrendType.toLowerCase();
         }
         // var url = '/ajax/zoushitu/'+ self.sLotteryType +'/'+ self.nPeriodNum +'/'+ sUrlTrendType +'/';
-        var url = "./json/data.json"
+        var url = "./json/"+ self.sTrendType +".json"
         if(self.bOrderFlag){
             url += '?order_by=1';
         }

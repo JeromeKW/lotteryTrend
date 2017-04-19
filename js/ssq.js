@@ -11,8 +11,8 @@ $(function(){
 		callbackfun: callBackFun
 	});
 	//选择显示期数
-	$('#select_period').change(function(){
-		oChartTrend.nPeriodNum = $(this).val();
+	$('a', $('#select_period')).click(function(){
+		oChartTrend.nPeriodNum = $(this).attr('no') * 1;
 		oChartTrend.bIsInit = false;
         oChartTrend.fCallback = showNumByUserSel;
 		oChartTrend._init();
