@@ -19,7 +19,7 @@ var okChartConfig = {
         'SSQ': {
             '09trend': {'1': ['box1', 'box1', 'box1', 'box3', 'box3', 'box3', 'box3', 'box3', 'box3', 'box3'], '2': ['box2'], 'nobr': ['2', 0]},
             '0': {'1': ['box1'], '2': ['box2'], 'nobr': ['2', 0]},
-            'NumTrend': {'1': ['box1'], '2': ['box2'], 'nobr': ['2', 0]},
+            'NumTrend': {'D1': ['box1'], 'D2': ['box2'], 'nobr': ['D2', 0]},
             'AreaBefore': {'1': ['box1'], 's': ['box2', 'box2', 'box2', 'box2', 'box2', 'box2'], 'nobr': ['s', 5]},
             'AreaAfter': {'1': ['box1'], 's': ['box2', 'box2', 'box3'], 'nobr': ['s', 2]},
             'OddEven': {'1': ['box1', 'box3'], '2': ['box2', 'box2'], 'nobr': ['2', 1]},
@@ -77,7 +77,7 @@ var okChartConfig = {
         'SSQ': {
             '09trend': {'1': [[1,11,21,31],[2,12,22,32],[3,13,23,33],[4,14,24],[5,15,25],[6,16,26],[7,17,27],[8,18,28],[9,19,29],[10,20,30]], '2': [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]]},
             '0': {'1': [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33]], '2': [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]]},
-            'NumTrend': {'1': [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33]], '2': [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]]},
+            'NumTrend': {'D1': [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33]], 'D2': [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]]},
             'AreaBefore': {'1': [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33]], 's': [['第一位'], ['第二位'], ['第三位'], ['第四位'], ['第五位'], ['第六位']]},
             'AreaAfter': {'1': [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]], 's': [['大', '小'], ['奇', '偶'], ['0', '1', '2']]},
             'OddEven': {'1': [[1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33], [2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32]], '2': [[1,3,5,7,9,11,13,15], [2,4,6,8,10,12,14,16]]},
@@ -124,7 +124,7 @@ var okChartConfig = {
     //普通号码背景
     oBallClsConfig: {
         'SuperLotto': {'1': 'redBall', '2': 'blueBall'},
-        'SSQ': {'1': 'redBall', '2': 'blueBall'},
+        'SSQ': {'D1': 'redBall', 'D2': 'blueBall'},
         '7LC': {'1': 'redBall', 't': 'blueBall'},
         '3D': {'1': 'redBall', '2': 'redBall', '3': 'redBall'},
         'P3': {'1': 'redBall', '2': 'redBall', '3': 'redBall'},
@@ -213,7 +213,7 @@ var okChartConfig = {
         'SSQ': {
             '0': {'1': {'3': 11, '4': 9, '7': 5, 'def': '0'}, '2': {'2': 8, '3': 6, 'def': '2'}},
             'AreaBefore': {'1': {'3': 11, '4': 9, '7': 5, 'def': '0'}},
-            'NumTrend': {'1': {'3': 11, '4': 9, '7': 5, 'def': '0'}, '2': {'2': 8, '3': 6, 'def': '2'}}
+            'NumTrend': {'D1': {'3': 11, '4': 9, '7': 5, 'def': '0'}, 'D2': {'2': 8, '3': 6, 'def': '2'}}
         },
         '7LC': {
             '1': {'1': {'3': 10, '4': 8, '7': 5, 'def': '0'}},
@@ -340,8 +340,9 @@ function drawTrendChart(param){
             // dataType: 'json',
             dataType: 'text',
             success: function(res){
-                res = eval(res);
-                self.processChartData(res);
+                // res = eval(res);
+                res = JSON.parse(res);
+                self.processChartData(res.trend);
             }
         });
     };
@@ -411,8 +412,8 @@ function drawTrendChart(param){
             }else{
                 var oSubWrap = $('<div class="clearfix chartList'+ (nNumCount == 4 ? ' bdbtm2' : '') +'"></div>');
                 // $('<p class="qihao">'+ data[index].p +'</p>').appendTo(oSubWrap);
-                oSubWrap[0].appendChild($('<p class="qihao">'+ data[index].p +'</p>')[0]);
-                var oTrendData = data[index].d, oSingleNum = '', oListHtml = '';
+                oSubWrap[0].appendChild($('<p class="qihao">'+ data[index].lotteryNO +'</p>')[0]);
+                var oTrendData = data[index].data, oSingleNum = '', oListHtml = '';
                 if((self.sLotteryType == '3D' || self.sLotteryType == 'P3') && self.sTrendType == 'CNumTrend'){
                     oListHtml = $('<div class="'+ oBoxCls.r +' bdr2"><em class="bg1">'+ data[index].r +'</em></div><div class="'+ oBoxCls.h +' bdr2"><em class="bg1">'+ data[index].h +'</em></div><div class="'+ oBoxCls.k +' bdr2"><em class="bg1">'+ data[index].k +'</em></div>');
                     oSubWrap[0].appendChild(oListHtml[0]);

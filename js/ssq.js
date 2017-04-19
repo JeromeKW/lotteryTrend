@@ -73,13 +73,13 @@ $(function(){
         $('a.selected',  $('#part_type_first')).removeClass('selected');
         $(this).addClass('selected');
         var sPart = $(this).attr('part');
-        oChartTrend.showPartResult(['1'], sPart);
+        oChartTrend.showPartResult(['D1'], sPart);
     });
     $('#part_type_second a').click(function(){
         $('a.selected',  $('#part_type_second')).removeClass('selected');
         $(this).addClass('selected');
         var sPart = $(this).attr('part');
-        oChartTrend.showPartResult(['2'], sPart);
+        oChartTrend.showPartResult(['D2'], sPart);
     });
     //切换号码形态
     if($('#change_num_shape').length){
@@ -425,8 +425,8 @@ function showHidePart(){
 function drawLineInit(){
     if(trendType == '09trend'){return;}
     //线色
-    var color_arr = {'1': ['#AD67CF', '#2E4F0A', '#4E2F7F', '#8F5D23', '#7F5FFF'], '2': ['blue', 'blue']};
-    if(trendType == 'AreaAfter'){color_arr = {'1': ['blue', 'blue']}}
+    var color_arr = {'D1': ['#AD67CF', '#2E4F0A', '#4E2F7F', '#8F5D23', '#7F5FFF'], 'D2': ['blue', 'blue']};
+    if(trendType == 'AreaAfter'){color_arr = {'D1': ['blue', 'blue']}}
     //折线实例化
     for(var k in oChartTrend.okjNumData){
         for(var i=0; i<oChartTrend.okjNumData[k].length; i++){
@@ -454,7 +454,7 @@ function drawLineInit(){
         }
     }
     // if(trendType == 'AreaAfter'){zline1_0.showLine(true);}
-    zline2_0.showLine(true);
+    zlineD2_0.showLine(true);
 }
 
 //初始化定位
