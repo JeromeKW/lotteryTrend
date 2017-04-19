@@ -3,7 +3,7 @@
 */
 
 //各彩种相关配置
-var okChartConfig = {
+var oChartConfig = {
     //样式配置
     oChartClsConfig: {
         'SuperLotto': {
@@ -260,6 +260,10 @@ var okChartConfig = {
         'P3': {
             'CNumTrend': ['BigSmall', 'OddEven', 'PrimeComp']
         }
+    },
+    //号码标记类型
+    oNumMarkType: {
+        'b': 'b', 'c': 'c', 'l': 'l', 'bc': 'm', 'bl': 'g', 'cl': 'y', 'bcl': 'j'
     }
 };    
 
@@ -310,8 +314,8 @@ function drawTrendChart(param){
         self.oPartData = {};    //分区数据
         self.oStoreNumShape = {}; //号码形态
         if((self.sLotteryType == 'SuperLotto' || self.sLotteryType == 'SSQ') && self.sTrendType == 'AreaAfter'){
-            okChartConfig.oBallClsConfig.SuperLotto = {'1': 'blueBall'};
-            okChartConfig.oBallClsConfig.SSQ = {'1': 'blueBall'};
+            oChartConfig.oBallClsConfig.SuperLotto = {'1': 'blueBall'};
+            oChartConfig.oBallClsConfig.SSQ = {'1': 'blueBall'};
         }
     };
     
@@ -343,275 +347,301 @@ function drawTrendChart(param){
                 // res = eval(res);
                 res = JSON.parse(res);
                 self.processChartData(res.trend);
+                // self.processCountData(res.count);
             }
         });
     };
-    //数据处理
+    //数据走势处理
     this.processChartData = function(data){
         if(!data.length){alert('获取数据失败！');return;}
         var oChartList = $('<div></div>'), oBoxCls = '', nNumCount = 0, oPartConfData = ''; //nNumCount 期数计数
         if(self.sLotteryType == 'SuperLotto' && (self.sTrendType == '1' || self.sTrendType == '3' || self.sTrendType == '6')){
-            oBoxCls = okChartConfig.oChartClsConfig[self.sLotteryType]['1'];
-            oPartConfData = okChartConfig.oPartConfig[self.sLotteryType]['1'];
+            oBoxCls = oChartConfig.oChartClsConfig[self.sLotteryType]['1'];
+            oPartConfData = oChartConfig.oPartConfig[self.sLotteryType]['1'];
         }else if(self.sLotteryType == 'SSQ' && (self.sTrendType == '0' || self.sTrendType == '2' || self.sTrendType == '4')){
-            oBoxCls = okChartConfig.oChartClsConfig[self.sLotteryType]['0'];
-            oPartConfData = okChartConfig.oPartConfig[self.sLotteryType]['0'];
+            oBoxCls = oChartConfig.oChartClsConfig[self.sLotteryType]['0'];
+            oPartConfData = oChartConfig.oPartConfig[self.sLotteryType]['0'];
         }else if(self.sLotteryType == '7LC' && (self.sTrendType == '1' || self.sTrendType == '3' || self.sTrendType == '5')){
-            oBoxCls = okChartConfig.oChartClsConfig[self.sLotteryType]['1'];
-            oPartConfData = okChartConfig.oPartConfig[self.sLotteryType]['1'];
+            oBoxCls = oChartConfig.oChartClsConfig[self.sLotteryType]['1'];
+            oPartConfData = oChartConfig.oPartConfig[self.sLotteryType]['1'];
         }else if(self.sLotteryType == 'P7' && (self.sTrendType == '2' || self.sTrendType == '5' || self.sTrendType == '0')){
-            oBoxCls = okChartConfig.oChartClsConfig[self.sLotteryType]['1'];
-            oPartConfData = okChartConfig.oPartConfig[self.sLotteryType]['1'];
+            oBoxCls = oChartConfig.oChartClsConfig[self.sLotteryType]['1'];
+            oPartConfData = oChartConfig.oPartConfig[self.sLotteryType]['1'];
         }else{
-            oBoxCls = okChartConfig.oChartClsConfig[self.sLotteryType][self.sTrendType];
-            oPartConfData = okChartConfig.oPartConfig[self.sLotteryType][self.sTrendType];
+            oBoxCls = oChartConfig.oChartClsConfig[self.sLotteryType][self.sTrendType];
+            oPartConfData = oChartConfig.oPartConfig[self.sLotteryType][self.sTrendType];
         }
         var aDistanceShape = [], aOddEvenShape = [], a012Shape = [], aBigSmallShape = [], aPrimeCompShape = [];
         for(var index=0; index<data.length; index++){
             var sPeriodHtml = '';
-            if(data[index].p == 'MaxSkip'){     //最大遗漏
-                self.oStoreSkip['ms']  = data[index].d;
-                if(data[index].s){
-                    self.oStoreSkip.ms.s = data[index].s;
-                }
-            }else if(data[index].p == 'NowSkip'){   //当前遗漏
-                self.oStoreSkip['ns']  = data[index].d;
-                self.oStoreSkip['mn']  = {'1': Number(data[index].red_max), '2': Number(data[index].blue_max)};
-                if(self.sTrendType == 'AreaAfter'){
-                    self.oStoreSkip['mn']  = {'1': Number(data[index].blue_max)};
-                }else if(self.sLotteryType == '3D' || self.sLotteryType == 'P3'){
-                    if(self.sTrendType == 'PNumTrend' || self.sTrendType == 'OddEven' || self.sTrendType == 'PrimeComp' || self.sTrendType == '012Trend'){
-                        self.oStoreSkip['mn']  = {'1': Number(data[index].redH_max), '2': Number(data[index].redT_max), '3': Number(data[index].redB_max)};
-                    }else if(self.sTrendType == 'CNumTrend'){
-                        self.oStoreSkip['mn']  = {'1': Number(data[index].red_max)};
+            var oSubWrap = $('<div class="clearfix chartList'+ (nNumCount == 4 ? ' bdbtm2' : '') +'"></div>');
+            // $('<p class="qihao">'+ data[index].p +'</p>').appendTo(oSubWrap);
+            oSubWrap[0].appendChild($('<p class="qihao">'+ data[index].lotteryNO +'</p>')[0]);
+            var oTrendData = data[index].data, oSingleNum = '', oListHtml = '';
+            if((self.sLotteryType == '3D' || self.sLotteryType == 'P3') && self.sTrendType == 'CNumTrend'){
+                oListHtml = $('<div class="'+ oBoxCls.r +' bdr2"><em class="bg1">'+ data[index].r +'</em></div><div class="'+ oBoxCls.h +' bdr2"><em class="bg1">'+ data[index].h +'</em></div><div class="'+ oBoxCls.k +' bdr2"><em class="bg1">'+ data[index].k +'</em></div>');
+                oSubWrap[0].appendChild(oListHtml[0]);
+                oSubWrap[0].appendChild(oListHtml[1]);
+                oSubWrap[0].appendChild(oListHtml[2]);
+            }
+            for(var key in oTrendData){
+                var nCountNum = 0;
+                if(!self.oPartData[key]){self.oPartData[key] = {};}
+                if(!self.oStorePartData[key]){self.oStorePartData[key] = {};}
+                self.oPartData[key].num = 0;
+                var  nKjNumCount = 0;
+                for(var i=0; i<oTrendData[key].length; i++){
+                    var sBlockCls = oBoxCls[key][i] +' bdr2';
+                    if(key == oBoxCls.nobr[0] && i == oBoxCls.nobr[1]){
+                        sBlockCls = oBoxCls[key][i];
                     }
-                }else if(self.sLotteryType == 'P5'){
-                     self.oStoreSkip['mn']  = {'1': Number(data[index].redH_max), '2': Number(data[index].redT_max), '3': Number(data[index].redB_max), '4': Number(data[index].redM_max), '5': Number(data[index].redN_max)};
-                }else if(self.sLotteryType == 'P7'){
-                     self.oStoreSkip['mn']  = {'1': Number(data[index].redH_max), '2': Number(data[index].redT_max), '3': Number(data[index].redB_max), '4': Number(data[index].redM_max), '5': Number(data[index].redN_max), '6': Number(data[index].redO_max), '7': Number(data[index].redP_max)};
-                }
-                if(data[index].s){
-                    self.oStoreSkip.ns.s = data[index].s;
-                    self.oStoreSkip.mn.s = {'012': Number(data[index].max_012), 'OddEven': Number(data[index].max_OddEven), 'BigSmall': Number(data[index].max_BigSmall), 'Distance': Number(data[index].max_Dis)};
-                    if(self.sLotteryType == '3D' || self.sLotteryType == 'P3'){
-                        if(self.sTrendType == 'CNumTrend'){
-                            self.oStoreSkip.mn.s = {'OddEven': Number(data[index].max_jo), 'BigSmall': Number(data[index].max_dx), 'PrimeComp': Number(data[index].max_zh)};
-                        }
-                    }
-                }
-            }else if(data[index].p == 'HistorySeriesCount'){    //最大连号
-                self.oStoreSkip['hsc']  = data[index].d;
-                if(data[index].s){
-                    self.oStoreSkip.hsc.s = data[index].s;
-                }
-            }else if(data[index].p == 'NumApperCount'){ //出现次数
-                self.oStoreSkip['nac']  = data[index].d;
-                if(data[index].s){
-                    self.oStoreSkip.nac.s = data[index].s;
-                }
-            }else{
-                var oSubWrap = $('<div class="clearfix chartList'+ (nNumCount == 4 ? ' bdbtm2' : '') +'"></div>');
-                // $('<p class="qihao">'+ data[index].p +'</p>').appendTo(oSubWrap);
-                oSubWrap[0].appendChild($('<p class="qihao">'+ data[index].lotteryNO +'</p>')[0]);
-                var oTrendData = data[index].data, oSingleNum = '', oListHtml = '';
-                if((self.sLotteryType == '3D' || self.sLotteryType == 'P3') && self.sTrendType == 'CNumTrend'){
-                    oListHtml = $('<div class="'+ oBoxCls.r +' bdr2"><em class="bg1">'+ data[index].r +'</em></div><div class="'+ oBoxCls.h +' bdr2"><em class="bg1">'+ data[index].h +'</em></div><div class="'+ oBoxCls.k +' bdr2"><em class="bg1">'+ data[index].k +'</em></div>');
-                    oSubWrap[0].appendChild(oListHtml[0]);
-                    oSubWrap[0].appendChild(oListHtml[1]);
-                    oSubWrap[0].appendChild(oListHtml[2]);
-                }
-                for(var key in oTrendData){
-                    var nCountNum = 0;
-                    if(!self.oPartData[key]){self.oPartData[key] = {};}
-                    if(!self.oStorePartData[key]){self.oStorePartData[key] = {};}
-                    self.oPartData[key].num = 0;
-                    var  nKjNumCount = 0;
-                    for(var i=0; i<oTrendData[key].length; i++){
-                        var sBlockCls = oBoxCls[key][i] +' bdr2';
-                        if(key == oBoxCls.nobr[0] && i == oBoxCls.nobr[1]){
-                            sBlockCls = oBoxCls[key][i];
-                        }
-                        oListHtml = $('<div class="'+ sBlockCls +'"></div>');
-                        for(var j=0; j<oTrendData[key][i].length; j++){
-                            if(!oTrendData[key][i][j]){oTrendData[key][i][j] = '&nbsp;';}
-                            if(!self.oMissData[key]){self.oMissData[key] = [];}
-                            if(!self.oReverseMissData[key]){self.oReverseMissData[key] = [];}
-                            if(!self.oMissData[key][nCountNum]){self.oMissData[key][nCountNum] = [];}
-                            if(!self.oReverseMissData[key][nCountNum]){self.oReverseMissData[key][nCountNum] = false;}
-                            if(/^[axzlcbHgmjyt-]/.test(oTrendData[key][i][j])){
-                                var sNumType = oTrendData[key][i][j].substr(0, 1), sNumVal = oTrendData[key][i][j].substr(1);
-                                if(sNumType == 'a' || sNumType == 'x' || sNumType == 'z'){
-                                    oSingleNum = $('<em numtype="'+ sNumType +'" class="bg1 '+ okChartConfig.oSpecBallClsConfig[self.sLotteryType][sNumType] +'">'+ sNumVal +'</em>');
-                                }else if(sNumType == 'H'){
-                                    var nMissNum = sNumVal.indexOf('_') == -1 ? sNumVal : sNumVal.split('_')[1];
-                                    oSingleNum = $('<em class="bg1 bg1Txt"'+ (Number(nMissNum) > 100 ? ' style="font-family: \'宋体\'"' : '') +'>'+ nMissNum +'</em>');
-                                }else if(sNumType == 't'){
-                                    oSingleNum = $('<em class="bg1 '+ okChartConfig.oBallClsConfig[self.sLotteryType]['t'] +'">'+ sNumVal +'</em>');
-                                }else{
-                                    oSingleNum = $('<em class="bg1 '+ okChartConfig.oBallClsConfig[self.sLotteryType][key] +'">'+ sNumVal +'</em>');
-                                }
-                                oListHtml[0].appendChild(oSingleNum[0]);
-                                switch(sNumType){
-                                    case 'l': 
-                                        self.aLhNum.push(oSingleNum);
-                                        break;
-                                    case 'c':
-                                        self.aCfNum.push(oSingleNum);
-                                        break;
-                                    case 'b':
-                                        self.aPbNum.push(oSingleNum);
-                                        break;
-                                    case 'g':
-                                        self.aLhNum.push(oSingleNum);
-                                        self.aPbNum.push(oSingleNum);
-                                        break;
-                                    case 'm':
-                                        self.aCfNum.push(oSingleNum);
-                                        self.aPbNum.push(oSingleNum);
-                                        break;
-                                    case 'j':
-                                        self.aLhNum.push(oSingleNum);
-                                        self.aCfNum.push(oSingleNum);
-                                        self.aPbNum.push(oSingleNum);
-                                        break;
-                                    case 'y':
-                                        self.aLhNum.push(oSingleNum);
-                                        self.aCfNum.push(oSingleNum);
-                                        break;
-                                    case 'a':
-                                        self.aZlNum.push(oSingleNum);
-                                        self.aXlNum.push(oSingleNum);
-                                        break;
-                                    case 'z':
-                                        self.aZlNum.push(oSingleNum);
-                                        break; 
-                                    case 'x':
-                                        self.aXlNum.push(oSingleNum);
-                                        break;   
-                                }
-                                if(sNumType != 'H'){
-                                    if(self.bOrderFlag){
-                                        self.oReverseMissData[key][nCountNum] = true;
-                                    }else{
-                                        self.oMissData[key][nCountNum] = [];
-                                    }
-                                    if(sNumType != 't'){
-                                        if(!self.okjNumData[key]){self.okjNumData[key] = [];}
-                                        if(!self.okjNumData[key][nKjNumCount]){self.okjNumData[key][nKjNumCount] = [];}
-                                        self.okjNumData[key][nKjNumCount].push(oSingleNum);
-                                        nKjNumCount += 1;
-                                    }else{
-                                        if(!self.okjNumData['t']){self.okjNumData['t'] = [];}
-                                        if(!self.okjNumData['t'][0]){self.okjNumData['t'][0] = [];}
-                                        self.okjNumData['t'][0].push(oSingleNum);
-                                    }
-                                }else if(sNumType == 'H'){
-                                    if(sNumVal.indexOf('_') != -1){
-                                        var nKeyIndex = sNumVal.split('_')[0];
-                                        if(!self.oDefMissNumData[key]){self.oDefMissNumData[key] = [];}
-                                        if(!self.oDefMissNumData[key][nKeyIndex]){self.oDefMissNumData[key][nKeyIndex] = [];}
-                                        self.oDefMissNumData[key][nKeyIndex].push(oSingleNum);
-                                    }
-                                    if(!self.oReverseMissData[key][nCountNum]){
-                                        self.oMissData[key][nCountNum].push(oSingleNum);
-                                    }
-                                }
+                    oListHtml = $('<div class="'+ sBlockCls +'"></div>');
+                    for(var j=0; j<oTrendData[key][i].length; j++){
+                        if(!oTrendData[key][i][j]){oTrendData[key][i][j] = '&nbsp;';}
+                        if(!self.oMissData[key]){self.oMissData[key] = [];}
+                        if(!self.oReverseMissData[key]){self.oReverseMissData[key] = [];}
+                        if(!self.oMissData[key][nCountNum]){self.oMissData[key][nCountNum] = [];}
+                        if(!self.oReverseMissData[key][nCountNum]){self.oReverseMissData[key][nCountNum] = false;}
+                        // if(/^[axzlcbHgmjyt-]/.test(oTrendData[key][i][j])){
+                        if(/^[-]/.test(oTrendData[key][i][j])){
+                            var sValData = oTrendData[key][i][j].substr(1);
+                            var aValData = sValData.split('|');
+                            var sNumType = '';
+                            var sNumVal = aValData[1];
+                            if(aValData[0].indexOf('z') != -1 && aValData[0].indexOf('x') != -1){
+                                sNumType = 'a';
+                            }else if(aValData[0].indexOf('z') != -1){
+                                sNumType = 'z';
+                            }else if(aValData[0].indexOf('x') != -1){
+                                sNumType = 'x';
                             }else{
-                                // $('<em class="bg1">'+ oTrendData[key][i][j] +'</em>').appendTo(oListHtml);
-                                oSingleNum = $('<em class="bg1"'+ (Number(oTrendData[key][i][j]) > 100 ? ' style="font-family: \'宋体\'"' : '') +'>'+ oTrendData[key][i][j] +'</em>');
-                                oListHtml[0].appendChild(oSingleNum[0]);
+                                sNumType = oChartConfig.oNumMarkType[aValData[0]];
+                            }
+
+                            if(sNumType == 'a' || sNumType == 'x' || sNumType == 'z'){
+                                oSingleNum = $('<em numtype="'+ sNumType +'" class="bg1 '+ oChartConfig.oSpecBallClsConfig[self.sLotteryType][sNumType] +'">'+ sNumVal +'</em>');
+                            }else if(sNumType == 'H'){
+                                var nMissNum = sNumVal.indexOf('_') == -1 ? sNumVal : sNumVal.split('_')[1];
+                                oSingleNum = $('<em class="bg1 bg1Txt"'+ (Number(nMissNum) > 100 ? ' style="font-family: \'宋体\'"' : '') +'>'+ nMissNum +'</em>');
+                            }else if(sNumType == 't'){
+                                oSingleNum = $('<em class="bg1 '+ oChartConfig.oBallClsConfig[self.sLotteryType]['t'] +'">'+ sNumVal +'</em>');
+                            }else{
+                                oSingleNum = $('<em class="bg1 '+ oChartConfig.oBallClsConfig[self.sLotteryType][key] +'">'+ sNumVal +'</em>');
+                            }
+                            oListHtml[0].appendChild(oSingleNum[0]);
+                            switch(sNumType){
+                                case 'l': 
+                                    self.aLhNum.push(oSingleNum);
+                                    break;
+                                case 'c':
+                                    self.aCfNum.push(oSingleNum);
+                                    break;
+                                case 'b':
+                                    self.aPbNum.push(oSingleNum);
+                                    break;
+                                case 'g':
+                                    self.aLhNum.push(oSingleNum);
+                                    self.aPbNum.push(oSingleNum);
+                                    break;
+                                case 'm':
+                                    self.aCfNum.push(oSingleNum);
+                                    self.aPbNum.push(oSingleNum);
+                                    break;
+                                case 'j':
+                                    self.aLhNum.push(oSingleNum);
+                                    self.aCfNum.push(oSingleNum);
+                                    self.aPbNum.push(oSingleNum);
+                                    break;
+                                case 'y':
+                                    self.aLhNum.push(oSingleNum);
+                                    self.aCfNum.push(oSingleNum);
+                                    break;
+                                case 'a':
+                                    self.aZlNum.push(oSingleNum);
+                                    self.aXlNum.push(oSingleNum);
+                                    break;
+                                case 'z':
+                                    self.aZlNum.push(oSingleNum);
+                                    break; 
+                                case 'x':
+                                    self.aXlNum.push(oSingleNum);
+                                    break;   
+                            }
+                            if(sNumType != 'H'){
+                                if(self.bOrderFlag){
+                                    self.oReverseMissData[key][nCountNum] = true;
+                                }else{
+                                    self.oMissData[key][nCountNum] = [];
+                                }
+                                if(sNumType != 't'){
+                                    if(!self.okjNumData[key]){self.okjNumData[key] = [];}
+                                    if(!self.okjNumData[key][nKjNumCount]){self.okjNumData[key][nKjNumCount] = [];}
+                                    self.okjNumData[key][nKjNumCount].push(oSingleNum);
+                                    nKjNumCount += 1;
+                                }else{
+                                    if(!self.okjNumData['t']){self.okjNumData['t'] = [];}
+                                    if(!self.okjNumData['t'][0]){self.okjNumData['t'][0] = [];}
+                                    self.okjNumData['t'][0].push(oSingleNum);
+                                }
+                            }else if(sNumType == 'H'){
+                                if(sNumVal.indexOf('_') != -1){
+                                    var nKeyIndex = sNumVal.split('_')[0];
+                                    if(!self.oDefMissNumData[key]){self.oDefMissNumData[key] = [];}
+                                    if(!self.oDefMissNumData[key][nKeyIndex]){self.oDefMissNumData[key][nKeyIndex] = [];}
+                                    self.oDefMissNumData[key][nKeyIndex].push(oSingleNum);
+                                }
                                 if(!self.oReverseMissData[key][nCountNum]){
                                     self.oMissData[key][nCountNum].push(oSingleNum);
                                 }
                             }
-                            if(okChartConfig.oHasPartConfig[self.sLotteryType][self.sTrendType]){
-                                for(var pkey in oPartConfData[key]){
-                                    if(pkey == 'def'){continue;}
-                                    if(!self.oStorePartData[key][pkey]){
-                                        self.oStorePartData[key][pkey] = [];
-                                    }
-                                    if(self.oPartData[key].num > 0 && self.oPartData[key].num % oPartConfData[key][pkey] == 0){
-                                        self.oStorePartData[key][pkey].push(oSingleNum);
-                                    }
+                        }else{
+                            oSingleNum = $('<em class="bg1"'+ (Number(oTrendData[key][i][j]) > 100 ? ' style="font-family: \'宋体\'"' : '') +'>'+ oTrendData[key][i][j] +'</em>');
+                            oListHtml[0].appendChild(oSingleNum[0]);
+                            if(!self.oReverseMissData[key][nCountNum]){
+                                self.oMissData[key][nCountNum].push(oSingleNum);
+                            }
+                        }
+                        if(oChartConfig.oHasPartConfig[self.sLotteryType][self.sTrendType]){
+                            for(var pkey in oPartConfData[key]){
+                                if(pkey == 'def'){continue;}
+                                if(!self.oStorePartData[key][pkey]){
+                                    self.oStorePartData[key][pkey] = [];
+                                }
+                                if(self.oPartData[key].num > 0 && self.oPartData[key].num % oPartConfData[key][pkey] == 0){
+                                    self.oStorePartData[key][pkey].push(oSingleNum);
                                 }
                             }
-                            self.oPartData[key].num += 1;
-                            nCountNum += 1;
                         }
-                        // oSubWrap.append(oListHtml);
-                        oSubWrap[0].appendChild(oListHtml[0]);
-                    }   
-                }
-                if(data[index].s){
-                    var nShapeCount = 0;
-                    if(data[index].s['Distance']){
-                        for(var i=0; i<data[index].s['Distance'].length; i++){
-                            oListHtml = self.getNumShapeHtml(oBoxCls, data[index].s['Distance'], i, 'Distance', nShapeCount);
-                            aDistanceShape.push(oListHtml);
-                            oSubWrap[0].appendChild(oListHtml[0]);
-                            nShapeCount += 1;
-                        }
-                        self.oStoreNumShape['Distance'] = aDistanceShape;
+                        self.oPartData[key].num += 1;
+                        nCountNum += 1;
                     }
-                    if(data[index].s['BigSmall']){
-                        for(var i=0; i<data[index].s['BigSmall'].length; i++){
-                            oListHtml = self.getNumShapeHtml(oBoxCls, data[index].s['BigSmall'], i, 'BigSmall', nShapeCount);
-                            aBigSmallShape.push(oListHtml);
-                            oSubWrap[0].appendChild(oListHtml[0]);
-                            nShapeCount += 1;
-                        }
-                        self.oStoreNumShape['BigSmall'] = aBigSmallShape;
-                    }
-                    if(data[index].s['OddEven']){
-                        for(var i=0; i<data[index].s['OddEven'].length; i++){
-                            oListHtml = self.getNumShapeHtml(oBoxCls, data[index].s['OddEven'], i, 'OddEven', nShapeCount);
-                            aOddEvenShape.push(oListHtml);
-                            oSubWrap[0].appendChild(oListHtml[0]);
-                            nShapeCount += 1;
-                        }
-                        self.oStoreNumShape['OddEven'] = aOddEvenShape;
-                    }
-                    if(data[index].s['012']){
-                        if(nShapeCount > oBoxCls.s.length - 1){nShapeCount = 0;}
-                        for(var i=0; i<data[index].s['012'].length; i++){
-                            oListHtml = self.getNumShapeHtml(oBoxCls, data[index].s['012'], i, '012', nShapeCount);
-                            a012Shape.push(oListHtml);
-                            oSubWrap[0].appendChild(oListHtml[0]);
-                            nShapeCount += 1;
-                        }
-                        self.oStoreNumShape['012'] = a012Shape;
-                    }
-                    if(data[index].s['PrimeComp']){
-                        if(nShapeCount > oBoxCls.s.length - 1){nShapeCount = 0;}
-                        for(var i=0; i<data[index].s['PrimeComp'].length; i++){
-                            oListHtml = self.getNumShapeHtml(oBoxCls, data[index].s['PrimeComp'], i, 'PrimeComp', nShapeCount);
-                            aPrimeCompShape.push(oListHtml);
-                            oSubWrap[0].appendChild(oListHtml[0]);
-                            nShapeCount += 1;
-                        }
-                        self.oStoreNumShape['PrimeComp'] = aPrimeCompShape;
-                    }
-                }
-                // oChartList.append(oSubWrap);
-                oChartList[0].appendChild(oSubWrap[0]);
-                if(nNumCount > 4){nNumCount = 0;}
-                nNumCount += 1;
+                    oSubWrap[0].appendChild(oListHtml[0]);
+                }   
             }
+            /*if(data[index].s){
+                var nShapeCount = 0;
+                if(data[index].s['Distance']){
+                    for(var i=0; i<data[index].s['Distance'].length; i++){
+                        oListHtml = self.getNumShapeHtml(oBoxCls, data[index].s['Distance'], i, 'Distance', nShapeCount);
+                        aDistanceShape.push(oListHtml);
+                        oSubWrap[0].appendChild(oListHtml[0]);
+                        nShapeCount += 1;
+                    }
+                    self.oStoreNumShape['Distance'] = aDistanceShape;
+                }
+                if(data[index].s['BigSmall']){
+                    for(var i=0; i<data[index].s['BigSmall'].length; i++){
+                        oListHtml = self.getNumShapeHtml(oBoxCls, data[index].s['BigSmall'], i, 'BigSmall', nShapeCount);
+                        aBigSmallShape.push(oListHtml);
+                        oSubWrap[0].appendChild(oListHtml[0]);
+                        nShapeCount += 1;
+                    }
+                    self.oStoreNumShape['BigSmall'] = aBigSmallShape;
+                }
+                if(data[index].s['OddEven']){
+                    for(var i=0; i<data[index].s['OddEven'].length; i++){
+                        oListHtml = self.getNumShapeHtml(oBoxCls, data[index].s['OddEven'], i, 'OddEven', nShapeCount);
+                        aOddEvenShape.push(oListHtml);
+                        oSubWrap[0].appendChild(oListHtml[0]);
+                        nShapeCount += 1;
+                    }
+                    self.oStoreNumShape['OddEven'] = aOddEvenShape;
+                }
+                if(data[index].s['012']){
+                    if(nShapeCount > oBoxCls.s.length - 1){nShapeCount = 0;}
+                    for(var i=0; i<data[index].s['012'].length; i++){
+                        oListHtml = self.getNumShapeHtml(oBoxCls, data[index].s['012'], i, '012', nShapeCount);
+                        a012Shape.push(oListHtml);
+                        oSubWrap[0].appendChild(oListHtml[0]);
+                        nShapeCount += 1;
+                    }
+                    self.oStoreNumShape['012'] = a012Shape;
+                }
+                if(data[index].s['PrimeComp']){
+                    if(nShapeCount > oBoxCls.s.length - 1){nShapeCount = 0;}
+                    for(var i=0; i<data[index].s['PrimeComp'].length; i++){
+                        oListHtml = self.getNumShapeHtml(oBoxCls, data[index].s['PrimeComp'], i, 'PrimeComp', nShapeCount);
+                        aPrimeCompShape.push(oListHtml);
+                        oSubWrap[0].appendChild(oListHtml[0]);
+                        nShapeCount += 1;
+                    }
+                    self.oStoreNumShape['PrimeComp'] = aPrimeCompShape;
+                }
+            }*/
+            oChartList[0].appendChild(oSubWrap[0]);
+            if(nNumCount > 4){nNumCount = 0;}
+            nNumCount += 1;
         }
         $.each($('.chartList', oChartList), function(i, e){
             $('div:last', $(e)).removeClass('bdr2');
         });
-        // self.oChartMain.html(oChartList.html());
         self.oChartMain.html('').append(oChartList.children());
         //表头
         if(self.bIsInit){
             var sTitleHtml = self.getTitleHtml();
             self.oChartTitle.append(sTitleHtml);
-            // $('div:last', self.oChartTitle).removeClass('bdr2');
         }
         self.oLoadingLayer.hide();
         self.oChartTitle.show();
         self.oChartMain.show();
+        if(self.bIsFloat){self.checkTitleFooterFloat();}
+        if(self.fCallback && typeof self.fCallback == 'function'){self.fCallback.call();}
+        showHidePart();     //分区
+        drawLineInit();     //连线
+        self.bOrderFlag = false;
+    };
+
+    //处理统计数据
+    self.processCountData = function(data){
+        if(!data || !data.maxMiss){
+            return;
+        }
+
+        if(data.maxMiss){     //最大遗漏
+            self.oStoreSkip['ms']  = data.maxMiss;
+            /*if(data[index].s){
+                self.oStoreSkip.ms.s = data[index].s;
+            }*/
+        }
+        if(data.nowMiss){   //当前遗漏
+            self.oStoreSkip['ns']  = data.nowMiss;
+            self.oStoreSkip['mn']  = {'D1': 25, 'D2': 30};
+            /*if(self.sTrendType == 'AreaAfter'){
+                self.oStoreSkip['mn']  = {'D1': Number(data[index].blue_max)};
+            }else if(self.sLotteryType == '3D' || self.sLotteryType == 'P3'){
+                if(self.sTrendType == 'PNumTrend' || self.sTrendType == 'OddEven' || self.sTrendType == 'PrimeComp' || self.sTrendType == '012Trend'){
+                    self.oStoreSkip['mn']  = {'D1': Number(data[index].redH_max), 'D2': Number(data[index].redT_max), 'D3': Number(data[index].redB_max)};
+                }else if(self.sTrendType == 'CNumTrend'){
+                    self.oStoreSkip['mn']  = {'D1': Number(data[index].red_max)};
+                }
+            }else if(self.sLotteryType == 'P5'){
+                 self.oStoreSkip['mn']  = {'D1': Number(data[index].redH_max), 'D2': Number(data[index].redT_max), 'D3': Number(data[index].redB_max), 'D4': Number(data[index].redM_max), 'D5': Number(data[index].redN_max)};
+            }else if(self.sLotteryType == 'P7'){
+                 self.oStoreSkip['mn']  = {'D1': Number(data[index].redH_max), 'D2': Number(data[index].redT_max), 'D3': Number(data[index].redB_max), 'D4': Number(data[index].redM_max), 'D5': Number(data[index].redN_max), 'D6': Number(data[index].redO_max), 'D7': Number(data[index].redP_max)};
+            }*/
+            /*if(data[index].s){
+                self.oStoreSkip.ns.s = data[index].s;
+                self.oStoreSkip.mn.s = {'012': Number(data[index].max_012), 'OddEven': Number(data[index].max_OddEven), 'BigSmall': Number(data[index].max_BigSmall), 'Distance': Number(data[index].max_Dis)};
+                if(self.sLotteryType == '3D' || self.sLotteryType == 'P3'){
+                    if(self.sTrendType == 'CNumTrend'){
+                        self.oStoreSkip.mn.s = {'OddEven': Number(data[index].max_jo), 'BigSmall': Number(data[index].max_dx), 'PrimeComp': Number(data[index].max_zh)};
+                    }
+                }
+            }*/
+        }
+        if(data.maxContinue){    //最大连号
+            self.oStoreSkip['hsc']  = data.maxContinue;
+            /*if(data[index].s){
+                self.oStoreSkip.hsc.s = data[index].s;
+            }*/
+        }
+        if(data.totalTimes){ //出现次数
+            self.oStoreSkip['nac']  = data.totalTimes;
+            /*if(data[index].s){
+                self.oStoreSkip.nac.s = data[index].s;
+            }*/
+        }
+
         //遗漏数据
         var sMaxSkip = '', sNowSkip = '', sNowSkipText = '', sHScountHtml = '', sNACountHtml = '', sAveHtml = '';
         if(self.oStoreSkip.ms){ 
@@ -688,7 +718,7 @@ function drawTrendChart(param){
                 }
             }
             if(self.oStoreSkip.ms.s){
-                var oNumShapeData = self.oStoreSkip.ms.s, aShapeKey = okChartConfig.aShapeKeyMapping[self.sLotteryType][self.sTrendType], nKeyCount = 0;;
+                var oNumShapeData = self.oStoreSkip.ms.s, aShapeKey = oChartConfig.aShapeKeyMapping[self.sLotteryType][self.sTrendType], nKeyCount = 0;;
                 for(var sk=0; sk<aShapeKey.length; sk++){
                     var skey = aShapeKey[sk];
                     if(nKeyCount > oBoxCls.s.length - 1){nKeyCount = 0;}
@@ -737,9 +767,6 @@ function drawTrendChart(param){
             }
         }
         var sTitleSpecial = '';
-        /* if((self.sLotteryType == '3D' || self.sLotteryType == 'P3') && self.sTrendType == 'CNumTrend'){
-            sTitleSpecial = '<div class="box4 bdr2"><em class="bg1"></em></div><div class="box3 bdr2"><em class="bg1"></em></div><div class="box3 bdr2"><em class="bg1"></em></div>';
-        } */
         if(sNACountHtml){
             sNACountHtml = '<div class="chartList clearfix"><p class="qihao">出现总次数</p>' + sTitleSpecial + sNACountHtml + '</div>';
         } 
@@ -761,30 +788,27 @@ function drawTrendChart(param){
         
         self.oSkipData.html(sNACountHtml + sAveHtml + sMaxSkip + sHSCountDetail + sNowSkip + sNowSkipText);
         self.oSkipData.show();
-        if(self.bIsFloat){self.checkTitleFooterFloat();}
-        if(self.fCallback && typeof self.fCallback == 'function'){self.fCallback.call();}
-        showHidePart();     //分区
-        drawLineInit();     //连线
-        self.bOrderFlag = false;
-    };
+
+    }
+
     //表头Html结构
     this.getTitleHtml = function(){
         var oTitleData = '', oBoxCls = '', sTitleHtml = '';
         if(self.sLotteryType == 'SuperLotto' && (self.sTrendType == '1' || self.sTrendType == '3' || self.sTrendType == '6')){
-            oTitleData = okChartConfig.oTitleDataConfig[self.sLotteryType]['1'];
-            oBoxCls = okChartConfig.oChartClsConfig[self.sLotteryType]['1'];
+            oTitleData = oChartConfig.oTitleDataConfig[self.sLotteryType]['1'];
+            oBoxCls = oChartConfig.oChartClsConfig[self.sLotteryType]['1'];
         }else if(self.sLotteryType == 'SSQ' && (self.sTrendType == '0' || self.sTrendType == '2' || self.sTrendType == '4')){
-            oTitleData = okChartConfig.oTitleDataConfig[self.sLotteryType]['0'];
-            oBoxCls = okChartConfig.oChartClsConfig[self.sLotteryType]['0'];
+            oTitleData = oChartConfig.oTitleDataConfig[self.sLotteryType]['0'];
+            oBoxCls = oChartConfig.oChartClsConfig[self.sLotteryType]['0'];
         }else if(self.sLotteryType == '7LC' && (self.sTrendType == '1' || self.sTrendType == '3' || self.sTrendType == '5')){
-            oTitleData = okChartConfig.oTitleDataConfig[self.sLotteryType]['1'];
-            oBoxCls = okChartConfig.oChartClsConfig[self.sLotteryType]['1'];
+            oTitleData = oChartConfig.oTitleDataConfig[self.sLotteryType]['1'];
+            oBoxCls = oChartConfig.oChartClsConfig[self.sLotteryType]['1'];
         }else if(self.sLotteryType == 'P7' && (self.sTrendType == '2' || self.sTrendType == '5' || self.sTrendType == '0')){
-            oTitleData = okChartConfig.oTitleDataConfig[self.sLotteryType]['1'];
-            oBoxCls = okChartConfig.oChartClsConfig[self.sLotteryType]['1'];
+            oTitleData = oChartConfig.oTitleDataConfig[self.sLotteryType]['1'];
+            oBoxCls = oChartConfig.oChartClsConfig[self.sLotteryType]['1'];
         }else{
-            oTitleData = okChartConfig.oTitleDataConfig[self.sLotteryType][self.sTrendType];
-            oBoxCls = okChartConfig.oChartClsConfig[self.sLotteryType][self.sTrendType];
+            oTitleData = oChartConfig.oTitleDataConfig[self.sLotteryType][self.sTrendType];
+            oBoxCls = oChartConfig.oChartClsConfig[self.sLotteryType][self.sTrendType];
         }
         for(var key in oTitleData){
             for(var i=0; i<oTitleData[key].length; i++){
@@ -987,17 +1011,13 @@ function drawTrendChart(param){
                 }    
             }
         }
-        /* for(var i=0,ilong=this.wemo[k].length; i< ilong; i++){
-            isShow ? sf.addClass(this.wemo[k][i][index], this.wBg[bg_k]):sf.mvClass(this.wemo[k][i][index], this.wBg[bg_k]);
-            this.wemo[k][i][index].style.color  = isShow ? '':sf.getStyle(this.wemo[k][i][index], 'backgroundColor');
-        } */
     };
     
     //投注初始化
     this.initNumBet = function(){
         $('.ctrl_selecter', $('#chart_bet_wrap')).each(function(i, e){
             $('em.betBall', $(e)).click(function(){
-                $(this).toggleClass(okChartConfig.oBetBallClsConfig[self.sLotteryType][self.sTrendType][i]);
+                $(this).toggleClass(oChartConfig.oBetBallClsConfig[self.sLotteryType][self.sTrendType][i]);
                 calSelectedNumMoney();  //外部接口
             });
         });
