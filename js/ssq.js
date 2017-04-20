@@ -443,7 +443,7 @@ function drawLineInit(){
     }
     window['dwoper'] = function(chk, val, key, bool){
         key	= key || 1;
-        oChartTrend.numberLocation(chk, val, key, bool);
+        // oChartTrend.numberLocation(chk, val, key, bool);
         var obj	= document.getElementById('l'+ key +'_'+ val);
         if(!chk){
             eval('zline'+ key +'_'+ val +'.showLine(false)');

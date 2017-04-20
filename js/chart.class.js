@@ -403,7 +403,7 @@ function drawTrendChart(param){
                         if(!self.oMissData[key][nCountNum]){self.oMissData[key][nCountNum] = [];}
                         if(!self.oReverseMissData[key][nCountNum]){self.oReverseMissData[key][nCountNum] = false;}
                         // if(/^[axzlcbHgmjyt-]/.test(oTrendData[key][i][j])){
-                        if(/^[-]/.test(oTrendData[key][i][j])){
+                        if(oTrendData[key][i][j].indexOf('-') != -1){
                             var sValData = oTrendData[key][i][j].substr(1);
                             var aValData = sValData.split('|');
                             var sNumType = '';
@@ -420,9 +420,6 @@ function drawTrendChart(param){
 
                             if(sNumType == 'a' || sNumType == 'x' || sNumType == 'z'){
                                 oSingleNum = $('<em numtype="'+ sNumType +'" class="bg1 '+ oChartConfig.oSpecBallClsConfig[self.sLotteryType][sNumType] +'">'+ sNumVal +'</em>');
-                            }else if(sNumType == 'H'){
-                                var nMissNum = sNumVal.indexOf('_') == -1 ? sNumVal : sNumVal.split('_')[1];
-                                oSingleNum = $('<em class="bg1 bg1Txt"'+ (Number(nMissNum) > 100 ? ' style="font-family: \'宋体\'"' : '') +'>'+ nMissNum +'</em>');
                             }else if(sNumType == 't'){
                                 oSingleNum = $('<em class="bg1 '+ oChartConfig.oBallClsConfig[self.sLotteryType]['t'] +'">'+ sNumVal +'</em>');
                             }else{
@@ -467,32 +464,28 @@ function drawTrendChart(param){
                                     self.aXlNum.push(oSingleNum);
                                     break;   
                             }
-                            if(sNumType != 'H'){
-                                if(self.bOrderFlag){
-                                    self.oReverseMissData[key][nCountNum] = true;
-                                }else{
-                                    self.oMissData[key][nCountNum] = [];
-                                }
-                                if(sNumType != 't'){
-                                    if(!self.okjNumData[key]){self.okjNumData[key] = [];}
-                                    if(!self.okjNumData[key][nKjNumCount]){self.okjNumData[key][nKjNumCount] = [];}
-                                    self.okjNumData[key][nKjNumCount].push(oSingleNum);
-                                    nKjNumCount += 1;
-                                }else{
-                                    if(!self.okjNumData['t']){self.okjNumData['t'] = [];}
-                                    if(!self.okjNumData['t'][0]){self.okjNumData['t'][0] = [];}
-                                    self.okjNumData['t'][0].push(oSingleNum);
-                                }
-                            }else if(sNumType == 'H'){
-                                if(sNumVal.indexOf('_') != -1){
-                                    var nKeyIndex = sNumVal.split('_')[0];
-                                    if(!self.oDefMissNumData[key]){self.oDefMissNumData[key] = [];}
-                                    if(!self.oDefMissNumData[key][nKeyIndex]){self.oDefMissNumData[key][nKeyIndex] = [];}
-                                    self.oDefMissNumData[key][nKeyIndex].push(oSingleNum);
-                                }
-                                if(!self.oReverseMissData[key][nCountNum]){
-                                    self.oMissData[key][nCountNum].push(oSingleNum);
-                                }
+                            if(self.bOrderFlag){
+                                self.oReverseMissData[key][nCountNum] = true;
+                            }else{
+                                self.oMissData[key][nCountNum] = [];
+                            }
+                            if(sNumType != 't'){
+                                if(!self.okjNumData[key]){self.okjNumData[key] = [];}
+                                if(!self.okjNumData[key][nKjNumCount]){self.okjNumData[key][nKjNumCount] = [];}
+                                self.okjNumData[key][nKjNumCount].push(oSingleNum);
+                                nKjNumCount += 1;
+                            }else{
+                                if(!self.okjNumData['t']){self.okjNumData['t'] = [];}
+                                if(!self.okjNumData['t'][0]){self.okjNumData['t'][0] = [];}
+                                self.okjNumData['t'][0].push(oSingleNum);
+                            }
+                        }else if(oTrendData[key][i][j].indexOf('H') != -1){
+                            var aValData = oTrendData[key][i][j].split('|');
+                            var nMissNum = aValData[1];
+                            oSingleNum = $('<em class="bg1 bg1Txt"'+ (Number(nMissNum) > 100 ? ' style="font-family: \'宋体\'"' : '') +'>'+ nMissNum +'</em>');
+                            oListHtml[0].appendChild(oSingleNum[0]);
+                            if(!self.oReverseMissData[key][nCountNum]){
+                                self.oMissData[key][nCountNum].push(oSingleNum);
                             }
                         }else{
                             oSingleNum = $('<em class="bg1"'+ (Number(oTrendData[key][i][j]) > 100 ? ' style="font-family: \'宋体\'"' : '') +'>'+ oTrendData[key][i][j] +'</em>');
@@ -990,27 +983,6 @@ function drawTrendChart(param){
             }
         }
         return aXYValue;
-    };
-    
-    //号码定位
-    this.numberLocation = function(isShow, index, k, tbool){
-        k = k || 1;
-        index = index || 1;
-        for(var i=0; i<self.okjNumData[k][index].length; i++){
-            if(isShow){
-                if(k == 't'){
-                    self.okjNumData[k][index][i].removeAttr('style').addClass('blueBall');
-                }else{
-                    self.okjNumData[k][index][i].removeAttr('style').addClass('redBall');
-                    if(self.oDefMissNumData[k][index][i]){self.oDefMissNumData[k][index][i].addClass('bg1Txt');}
-                }
-            }else{
-                self.okjNumData[k][index][i].css({'backgroundImage':'none', 'color': '#F6F6F6'});
-                if(k != 't'){
-                    if(self.oDefMissNumData[k][index][i]){self.oDefMissNumData[k][index][i].removeClass('bg1Txt');}
-                }    
-            }
-        }
     };
     
     //投注初始化
